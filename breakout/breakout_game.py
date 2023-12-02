@@ -5,10 +5,22 @@ pygame.init()
 
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)
+COLOR_RED = (255, 0, 0)
+COLOR_ORANGE = (255, 165, 0)
+COLOR_GREEN = (0, 128, 0)
+COLOR_YELLOW = (255, 255, 0)
+COLOR_BLUE = (135, 206, 235)
+COLOR_NULL = (0, 0, 0, 0)
 
-size = (500, 750)
+size = (650, 780)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Breakout - PyGame Edition - 2021.01.30")
+
+# score text
+score_font = pygame.font.Font('assets/PressStart2P.ttf', 40)
+score_text = score_font.render('00', True, COLOR_WHITE, COLOR_BLACK)
+score_text_rect = score_text.get_rect()
+score_text_rect.center = (150, 50)
 
 # sound effects
 bounce_sound_effect = pygame.mixer.Sound('assets/bounce.wav')
@@ -17,9 +29,10 @@ scoring_sound_effect = pygame.mixer.Sound('assets/258020__kodack__arcade-bleep-s
 # time between collisions
 last_bounce_time = 0
 bounce_interval = 500
+bounce_check = 0
 
 # player paddle position
-player_1_x = 200
+player_1_x = 325
 player_1_y = 670
 player_1_width = 80
 player_1_height = 15
@@ -31,17 +44,49 @@ player_1_move_left = False
 
 def initialize_ball_speed():
     ball_dx = random.random()
-    ball_dy= 2 - ball_dx
-
+    ball_dy = 6 - ball_dx
     return ball_dx, ball_dy
 
 
 # ball position and speed
-ball_x = 240
+ball_x = 325
 ball_y = 400
 ball_dx, ball_dy = initialize_ball_speed()
 ball_dx = ball_dx * random.choice([1, -1])
 speed_max = 25
+
+
+def create_rect(color, x, y, ):
+    block = pygame.draw.rect(screen, color, (x, 100 + y, 40, 15))
+    return block
+
+
+# bricks create
+transparent_block = pygame.draw.rect(screen, COLOR_NULL, (0, 0, 0, 0))
+
+red = []
+for n in range(2):
+    for c in range(14):
+        red_block = create_rect(COLOR_RED, 12 + c * 45, n * 20)
+        red.append(red_block)
+
+orange = []
+for n in range(2):
+    for c in range(14):
+        orange_block = create_rect(COLOR_ORANGE, 12 + c * 45, 40 + n * 20)
+        orange.append(orange_block)
+
+green = []
+for n in range(2):
+    for c in range(14):
+        green_block = create_rect(COLOR_GREEN, 12 + c * 45, 80 + n * 20)
+        green.append(green_block)
+
+yellow = []
+for n in range(2):
+    for c in range(14):
+        yellow_block = create_rect(COLOR_YELLOW, 12 + c * 45, 120 + n * 20)
+        yellow.append(yellow_block)
 
 
 def reset_ball():
@@ -84,14 +129,59 @@ while game_loop:
         screen.fill(COLOR_BLACK)
 
         # player paddle
-        player_paddle = pygame.draw.rect(screen, COLOR_WHITE,
+        player_paddle = pygame.draw.rect(screen, COLOR_BLUE,
                                          [player_1_x, player_1_y, player_1_width, player_1_height], 0)
 
         # ball create
-        ball = pygame.draw.rect(screen, COLOR_WHITE, [ball_x, ball_y, 13, 13], 0)
+        ball = pygame.draw.rect(screen, COLOR_BLUE, [ball_x, ball_y, 13, 13], 0)
+
+        # update score
+        score_text = score_font.render(str(score), True, COLOR_WHITE, COLOR_BLACK)
+
+        # collision brick
+        if bounce_check == 1:
+            if ball.collidelist(red) != -1:
+                ball_dy *= -1
+                red[ball.collidelist(red)] = transparent_block
+                bounce_check = 0
+                score += 7
+
+            if ball.collidelist(orange) != -1:
+                ball_dy *= -1
+                orange[ball.collidelist(orange)] = transparent_block
+                bounce_check = 0
+                score += 5
+
+            if ball.collidelist(green) != -1:
+                ball_dy *= -1
+                green[ball.collidelist(green)] = transparent_block
+                bounce_check = 0
+                score += 3
+
+            if ball.collidelist(yellow) != -1:
+                ball_dy *= -1
+                yellow[ball.collidelist(yellow)] = transparent_block
+                bounce_check = 0
+                score += 1
+
+
+        # drawing bricks
+        for red_block in red:
+            pygame.draw.rect(screen, COLOR_RED, red_block)
+
+        for orange_block in orange:
+            pygame.draw.rect(screen, COLOR_ORANGE, orange_block)
+
+        for green_block in green:
+            pygame.draw.rect(screen, COLOR_GREEN, green_block)
+
+        for yellow_block in yellow:
+            pygame.draw.rect(screen, COLOR_YELLOW, yellow_block)
+
+
 
         # ball collision with the wall
-        if ball_x > 487:
+        if ball_x > 637:
             ball_dx *= -1
             bounce_sound_effect.play()
         elif ball_x <= 0:
@@ -109,14 +199,39 @@ while game_loop:
                 ball_dy = -abs(ball_dy)
                 bounce_sound_effect.play()
                 last_bounce_time = current_time
+                bounce_check = 1
 
         # ball movement
         ball_x = ball_x + ball_dx
         ball_y = ball_y + ball_dy
 
         # ball reset
-        if ball_y >= 762:
+        if ball_y >= 780 - 13:
             reset_ball()
+            score = 0
+            red = []
+            for n in range(2):
+                for c in range(14):
+                    red_block = create_rect(COLOR_RED, 12 + c * 45, n * 20)
+                    red.append(red_block)
+
+            orange = []
+            for n in range(2):
+                for c in range(14):
+                    orange_block = create_rect(COLOR_ORANGE, 12 + c * 45, 40 + n * 20)
+                    orange.append(orange_block)
+
+            green = []
+            for n in range(2):
+                for c in range(14):
+                    green_block = create_rect(COLOR_GREEN, 12 + c * 45, 80 + n * 20)
+                    green.append(green_block)
+
+            yellow = []
+            for n in range(2):
+                for c in range(14):
+                    yellow_block = create_rect(COLOR_YELLOW, 12 + c * 45, 120 + n * 20)
+                    yellow.append(yellow_block)
 
         # player 1 right movement
         if player_1_move_right:
@@ -131,12 +246,16 @@ while game_loop:
             player_1_x += 0
 
         # player 1 collision with right wall
-        if player_1_x >= 420:
-            player_1_x = 420
+        if player_1_x >= 570:
+            player_1_x = 570
 
         # player 1 collision with left wall
         if player_1_x <= 0:
             player_1_x = 0
+
+        screen.blit(score_text, score_text_rect)
+
+
 
     # update screen
     pygame.display.flip()
