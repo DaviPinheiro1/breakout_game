@@ -265,7 +265,6 @@ while game_loop:
                         yellow[ball.collidelist(yellow)] = transparent_block
                         bounce_check = 1
                         score += 1
-        print(ball_dy)
 
         # drawing bricks
         for red_block in red:
