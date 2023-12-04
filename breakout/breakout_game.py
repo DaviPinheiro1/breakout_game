@@ -148,8 +148,7 @@ while game_loop:
         screen.fill(COLOR_BLACK)
 
         # player paddle
-        player_paddle = pygame.draw.rect(screen, COLOR_BLUE,
-                                         [player_1_x, player_1_y, player_1_width, player_1_height], 0)
+        player_paddle = pygame.draw.rect(screen, COLOR_BLUE,[player_1_x, player_1_y, player_1_width, player_1_height], 0)
 
         # ball create
         ball = pygame.draw.rect(screen, COLOR_BLUE, [ball_x, ball_y, 13, 13], 0)
@@ -167,24 +166,28 @@ while game_loop:
                 red[ball.collidelist(red)] = transparent_block
                 bounce_check = 0
                 score += 7
+                bounce_sound_effect.play()
 
             if ball.collidelist(orange) != -1:
                 ball_dy *= -1
                 orange[ball.collidelist(orange)] = transparent_block
                 bounce_check = 0
                 score += 5
+                bounce_sound_effect.play()
 
             if ball.collidelist(green) != -1:
                 ball_dy *= -1
                 green[ball.collidelist(green)] = transparent_block
                 bounce_check = 0
                 score += 3
+                bounce_sound_effect.play()
 
             if ball.collidelist(yellow) != -1:
                 ball_dy *= -1
                 yellow[ball.collidelist(yellow)] = transparent_block
                 bounce_check = 0
                 score += 1
+                bounce_sound_effect.play()
 
         # drawing bricks
         for red_block in red:
@@ -284,6 +287,9 @@ while game_loop:
             score = 0
             player_life = 3
             game_over = False
+            #realocating the player
+            player_1_x = 325
+            player_1_y = 670
 
 
         # clear screen
