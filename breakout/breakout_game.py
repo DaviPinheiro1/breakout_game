@@ -51,17 +51,18 @@ player_1_move_left = False
 
 
 def initialize_ball_speed():
-    ball_dx = random.random()
+    ball_x = 318
+    ball_y = 400
+    ball_dx = random.randint(1, 3)
     ball_dy = 6 - ball_dx
     return ball_dx, ball_dy
 
 
 # ball position and speed
-ball_x = 325
+ball_x = 318
 ball_y = 400
 ball_dx, ball_dy = initialize_ball_speed()
 ball_dx = ball_dx * random.choice([1, -1])
-speed_max = 25
 
 
 def create_rect(color, x, y, ):
@@ -162,32 +163,109 @@ while game_loop:
         # collision brick
         if bounce_check == 1:
             if ball.collidelist(red) != -1:
-                ball_dy *= -1
-                red[ball.collidelist(red)] = transparent_block
-                bounce_check = 0
-                score += 7
-                bounce_sound_effect.play()
+                if ball_dy == - abs(ball_dy):
+                    if ball_dy > - 10:
+                        ball_dy = - 10
+                        ball_dy *= -1
+                        red[ball.collidelist(red)] = transparent_block
+                        bounce_check = 0
+                        score += 7
+                    else:
+                        ball_dy *= -1
+                        red[ball.collidelist(red)] = transparent_block
+                        bounce_check = 0
+                        score += 7
+                else:
+                    if ball_dy < 10:
+                        ball_dy = 10
+                        ball_dy *= -1
+                        red[ball.collidelist(red)] = transparent_block
+                        bounce_check = 1
+                        score += 7
+                    else:
+                        ball_dy *= -1
+                        red[ball.collidelist(red)] = transparent_block
+                        bounce_check = 1
+                        score += 7
 
             if ball.collidelist(orange) != -1:
-                ball_dy *= -1
-                orange[ball.collidelist(orange)] = transparent_block
-                bounce_check = 0
-                score += 5
-                bounce_sound_effect.play()
+                if ball_dy == - abs(ball_dy):
+                    if ball_dy > - 9:
+                        ball_dy = - 9
+                        ball_dy *= -1
+                        orange[ball.collidelist(orange)] = transparent_block
+                        bounce_check = 0
+                        score += 5
+                    else:
+                        ball_dy *= -1
+                        orange[ball.collidelist(orange)] = transparent_block
+                        bounce_check = 0
+                        score += 5
+                else:
+                    if ball_dy < 9:
+                        ball_dy = 9
+                        ball_dy *= -1
+                        orange[ball.collidelist(orange)] = transparent_block
+                        bounce_check = 1
+                        score += 5
+                    else:
+                        ball_dy *= -1
+                        orange[ball.collidelist(orange)] = transparent_block
+                        bounce_check = 1
+                        score += 5
 
             if ball.collidelist(green) != -1:
-                ball_dy *= -1
-                green[ball.collidelist(green)] = transparent_block
-                bounce_check = 0
-                score += 3
-                bounce_sound_effect.play()
+                if ball_dy == - abs(ball_dy):
+                    if ball_dy > - 8:
+                        ball_dy = - 8
+                        ball_dy *= -1
+                        green[ball.collidelist(green)] = transparent_block
+                        bounce_check = 0
+                        score += 3
+                    else:
+                        ball_dy *= -1
+                        green[ball.collidelist(green)] = transparent_block
+                        bounce_check = 0
+                        score += 3
+                else:
+                    if ball_dy < 8:
+                        ball_dy = 8
+                        ball_dy *= -1
+                        green[ball.collidelist(green)] = transparent_block
+                        bounce_check = 1
+                        score += 3
+                    else:
+                        ball_dy *= -1
+                        green[ball.collidelist(green)] = transparent_block
+                        bounce_check = 1
+                        score += 3
 
             if ball.collidelist(yellow) != -1:
-                ball_dy *= -1
-                yellow[ball.collidelist(yellow)] = transparent_block
-                bounce_check = 0
-                score += 1
-                bounce_sound_effect.play()
+                if ball_dy == - abs(ball_dy):
+                    if ball_dy > -6:
+                        ball_dy = -6
+                        ball_dy *= -1
+                        yellow[ball.collidelist(yellow)] = transparent_block
+                        bounce_check = 0
+                        score += 1
+                    else:
+                        ball_dy *= -1
+                        yellow[ball.collidelist(yellow)] = transparent_block
+                        bounce_check = 0
+                        score += 1
+                else:
+                    if ball_dy < 6:
+                        ball_dy = 6
+                        ball_dy *= -1
+                        yellow[ball.collidelist(yellow)] = transparent_block
+                        bounce_check = 1
+                        score += 1
+                    else:
+                        ball_dy *= -1
+                        yellow[ball.collidelist(yellow)] = transparent_block
+                        bounce_check = 1
+                        score += 1
+        print(ball_dy)
 
         # drawing bricks
         for red_block in red:
@@ -217,7 +295,7 @@ while game_loop:
         if ball.colliderect(player_paddle):
             current_time = pygame.time.get_ticks()
             if current_time - last_bounce_time >= bounce_interval:
-                ball_dx = (ball_x + 6.5 - (player_1_x + player_1_width / 2)) / (player_1_width / 9)
+                ball_dx = (ball_x + 7 - (player_1_x + player_1_width / 2)) / (player_1_width / 9)
                 ball_dy = -abs(ball_dy)
                 bounce_sound_effect.play()
                 last_bounce_time = current_time
